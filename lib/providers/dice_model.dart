@@ -25,7 +25,7 @@ class DiceModel with ChangeNotifier {
     notifyListeners();
   }
   void generateDiceFour() {
-    diceOne = Random().nextInt(6) + 1;
+    diceFour = Random().nextInt(6) + 1;
     notifyListeners();
   }
 }

@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ludo_poc/dice/blue_dice.dart';
+import 'package:ludo_poc/dice/green_dice.dart';
+import 'package:ludo_poc/dice/red_dice.dart';
+import 'package:ludo_poc/dice/yellow_dice.dart';
+import 'package:ludo_poc/providers/dice_turn.dart';
 import 'package:ludo_poc/widgets/ludo_arena.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +32,7 @@ class MyApp extends StatelessWidget {
           providers: [
             ChangeNotifierProvider(create: (context) => GameState()),
             ChangeNotifierProvider(create: (context) => DiceModel()),
+            ChangeNotifierProvider(create: (context) => DiceTurn()),
           ],
           child: const _MyHomePage(
             title: 'Flutter Demo Home Page',
@@ -60,19 +66,15 @@ class _MyHomePageState extends State<_MyHomePage> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [Dice(), Dice()],
+            children: const [GreenDice(), YellowDice()],
           ),
           LudoArena(keyBar, gameState),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Dice(),
-              Dice()
-            ],
+            children: const [RedDice(), BlueDice()],
           ),
         ],
       ),
-
     );
   }
 }
