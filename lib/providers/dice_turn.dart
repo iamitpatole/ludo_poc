@@ -1,14 +1,12 @@
 
 import 'package:flutter/cupertino.dart';
 
-import '../models/token_type.dart';
-
 class DiceTurn with ChangeNotifier {
 
- TokenType? turn;
+ late int userId = 0;
  
- void updateDiceTurn(TokenType tokenType) {
-    turn = tokenType;
+ void updateDiceTurn(String userId) {
+    userId = userId;
     notifyListeners();
  }
 

@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 import '../providers/dice_model.dart';
 
 class GreenDice extends StatelessWidget {
-  const GreenDice({super.key});
+  final int userId;
+
+  const GreenDice(this.userId, {super.key});
 
   void updateDices(DiceModel dice) {
     for (int i = 0; i < 6; i++) {

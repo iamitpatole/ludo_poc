@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ludo_poc/providers/dice_turn.dart';
 import 'package:provider/provider.dart';
 
 import '../models/token_type.dart';
@@ -28,6 +29,7 @@ class Tokenp extends StatelessWidget {
   Widget build(BuildContext context) {
     final gameState = Provider.of<GameState>(context, listen: false);
     final dice = Provider.of<DiceModel>(context, listen: false);
+    final diceTurn = Provider.of<DiceTurn>(context, listen: false);
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 100),
       left: dimentions[0],
@@ -36,7 +38,13 @@ class Tokenp extends StatelessWidget {
       height: dimentions[3],
       child: GestureDetector(
         onTap: () {
-          gameState.moveToken(token, dice.diceOne);
+          if(diceTurn.userId == token.userId) {
+            gameState.moveToken(token, dice.diceOne);
+          } else {
+            showDialog(context: context, builder: (_) {
+              return const AlertDialog(title: Text('Its Not Your Turn'),);
+            });
+          }
         },
         child: Card(
           elevation: 5,

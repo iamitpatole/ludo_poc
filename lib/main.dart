@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:ludo_poc/dice/blue_dice.dart';
 import 'package:ludo_poc/dice/green_dice.dart';
 import 'package:ludo_poc/dice/red_dice.dart';
@@ -10,7 +9,6 @@ import 'package:provider/provider.dart';
 
 import 'providers/dice_model.dart';
 import 'providers/game_state.dart';
-import 'widgets/dice.dart';
 
 void main() {
   //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -52,6 +50,41 @@ class _MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<_MyHomePage> {
+  var userIds = <int>[];
+  var assignableUserIds = <int>[0,0,0,0];
+
+  @override
+  void initState() {
+    userIds = [123,789,456,678];  
+    detectDiceUserId();
+    super.initState();
+  }
+
+  detectDiceUserId() {
+    int loggedInUserIdIndex = userIds.indexOf(456);
+    if(loggedInUserIdIndex == 0) {
+      assignableUserIds = userIds;
+    }
+    if(loggedInUserIdIndex == 1) {
+      assignableUserIds[0] = userIds[loggedInUserIdIndex];
+      assignableUserIds[1] = userIds[2];
+      assignableUserIds[2] = userIds[3];
+      assignableUserIds[3] = userIds[0];
+    }
+    if(loggedInUserIdIndex == 2) {
+      assignableUserIds[0] = userIds[loggedInUserIdIndex];
+      assignableUserIds[1] = userIds[3];
+      assignableUserIds[2] = userIds[0];
+      assignableUserIds[3] = userIds[1];
+    }
+    if(loggedInUserIdIndex == 3) {
+      assignableUserIds[0] = userIds[loggedInUserIdIndex];
+      assignableUserIds[1] = userIds[0];
+      assignableUserIds[2] = userIds[1];
+      assignableUserIds[3] = userIds[2];
+    }
+  }
+
   GlobalKey keyBar = GlobalKey();
   @override
   Widget build(BuildContext context) {
@@ -64,14 +97,15 @@ class _MyHomePageState extends State<_MyHomePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [GreenDice(), YellowDice()],
+            children: [GreenDice(assignableUserIds[1]), YellowDice(assignableUserIds[2])],
           ),
           LudoArena(keyBar, gameState),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [RedDice(), BlueDice()],
+            children: [RedDice(assignableUserIds[0]), BlueDice(assignableUserIds[3])],
           ),
         ],
       ),

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 import '../models/position.dart';
@@ -14,25 +15,25 @@ class GameState with ChangeNotifier {
   GameState() {
     gameTokens = [
       //Green Tokens home
-      Token(TokenType.green, const Position(2, 2), TokenState.initial, 0),
-      Token(TokenType.green, const Position(2, 3), TokenState.initial, 1),
-      Token(TokenType.green, const Position(3, 2), TokenState.initial, 2),
-      Token(TokenType.green, const Position(3, 3), TokenState.initial, 3),
+      Token(TokenType.green, const Position(2, 2), TokenState.initial, 0  , 0),
+      Token(TokenType.green, const Position(2, 3), TokenState.initial, 1 , 1),
+      Token(TokenType.green, const Position(3, 2), TokenState.initial,2  , 2),
+      Token(TokenType.green, const Position(3, 3), TokenState.initial,3  ,3),
       //Yellow Token
-      Token(TokenType.yellow, const Position(2, 11), TokenState.initial, 4),
-      Token(TokenType.yellow, const Position(2, 12), TokenState.initial, 5),
-      Token(TokenType.yellow, const Position(3, 11), TokenState.initial, 6),
-      Token(TokenType.yellow, const Position(3, 12), TokenState.initial, 7),
+      Token(TokenType.yellow, const Position(2, 11), TokenState.initial, 4 ,4),
+      Token(TokenType.yellow, const Position(2, 12), TokenState.initial,5 ,5),
+      Token(TokenType.yellow, const Position(3, 11), TokenState.initial,6 ,6),
+      Token(TokenType.yellow, const Position(3, 12), TokenState.initial, 7 ,7),
       // Blue Token
-      Token(TokenType.blue, const Position(11, 11), TokenState.initial, 8),
-      Token(TokenType.blue, const Position(11, 12), TokenState.initial, 9),
-      Token(TokenType.blue, const Position(12, 11), TokenState.initial, 10),
-      Token(TokenType.blue, const Position(12, 12), TokenState.initial, 11),
+      Token(TokenType.blue, const Position(11, 11), TokenState.initial,08 ,8),
+      Token(TokenType.blue, const Position(11, 12), TokenState.initial,09 ,9),
+      Token(TokenType.blue, const Position(12, 11), TokenState.initial,10 ,10),
+      Token(TokenType.blue, const Position(12, 12), TokenState.initial,11 ,11),
       // Red Token
-      Token(TokenType.red, const Position(11, 2), TokenState.initial, 12),
-      Token(TokenType.red, const Position(11, 3), TokenState.initial, 13),
-      Token(TokenType.red, const Position(12, 2), TokenState.initial, 14),
-      Token(TokenType.red, const Position(12, 3), TokenState.initial, 15),
+      Token(TokenType.red, const Position(11, 2), TokenState.initial,12 ,12),
+      Token(TokenType.red, const Position(11, 3), TokenState.initial,13 ,13),
+      Token(TokenType.red, const Position(12, 2), TokenState.initial,14 ,14),
+      Token(TokenType.red, const Position(12, 3), TokenState.initial,15 ,15),
     ];
     starPositions = [
       const Position(6, 1),
