@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ludo_poc/providers/dice_turn.dart';
+import 'package:ludo_poc/providers/free_turn.dart';
 import 'package:provider/provider.dart';
 
 import '../models/token_type.dart';
@@ -29,7 +29,6 @@ class Tokenp extends StatelessWidget {
   Widget build(BuildContext context) {
     final gameState = Provider.of<GameState>(context, listen: false);
     final dice = Provider.of<DiceModel>(context, listen: false);
-    final diceTurn = Provider.of<DiceTurn>(context, listen: false);
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 100),
       left: dimentions[0],
@@ -38,7 +37,8 @@ class Tokenp extends StatelessWidget {
       height: dimentions[3],
       child: GestureDetector(
         onTap: () {
-          if(diceTurn.userId == token.userId) {
+          print(FreeTurn.freeTurnMap[token.userId]);
+          if(FreeTurn.freeTurnMap[token.userId]!) {
             gameState.moveToken(token, detectTokenDiceNumber(token, dice));
           } else {
             showDialog(context: context, builder: (_) {
@@ -63,13 +63,13 @@ class Tokenp extends StatelessWidget {
         return dice.diceOneCount;
       }
       if(token.type.name == 'green') {
-        return dice.diceTwoCount;
+        return dice.diceFourCount;
       }
       if(token.type.name == 'yellow') {
         return dice.diceThreeCount;
       }
       if(token.type.name == 'blue') {
-        return dice.diceFourCount;
+        return dice.diceTwoCount;
       }
       return 0;
   }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/dice_model.dart';
-import '../providers/dice_turn.dart';
+import '../providers/free_turn.dart';
 
 class RedDice extends StatelessWidget {
 
@@ -31,7 +31,6 @@ class RedDice extends StatelessWidget {
       "assets/images/6.png",
     ];
     final dice = Provider.of<DiceModel>(context);
-    final diceTurn = Provider.of<DiceTurn>(context, listen: false);
     final c = dice.diceOne;
     var img = Image.asset(
       diceOneImages[c - 1],
@@ -51,7 +50,7 @@ class RedDice extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () => {
-                      if (diceTurn.userId == userId) {
+                      if (FreeTurn.freeTurnMap[userId]!) {
                         updateDices(dice)
                       }
                       else {

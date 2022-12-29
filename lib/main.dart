@@ -3,11 +3,11 @@ import 'package:ludo_poc/dice/blue_dice.dart';
 import 'package:ludo_poc/dice/green_dice.dart';
 import 'package:ludo_poc/dice/red_dice.dart';
 import 'package:ludo_poc/dice/yellow_dice.dart';
-import 'package:ludo_poc/providers/dice_turn.dart';
 import 'package:ludo_poc/widgets/ludo_arena.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/dice_model.dart';
+import 'providers/free_turn.dart';
 import 'providers/game_state.dart';
 
 void main() {
@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
           providers: [
             ChangeNotifierProvider(create: (context) => GameState()),
             ChangeNotifierProvider(create: (context) => DiceModel()),
-            ChangeNotifierProvider(create: (context) => DiceTurn()),
           ],
           child: const _MyHomePage(
             title: 'Flutter Demo Home Page',
@@ -57,11 +56,12 @@ class _MyHomePageState extends State<_MyHomePage> {
   void initState() {
     userIds = [123,789,456,678];  
     detectDiceUserId();
+    FreeTurn.updateFreeTurn(assignableUserIds[0], true);
     super.initState();
   }
 
   detectDiceUserId() {
-    int loggedInUserIdIndex = userIds.indexOf(456);
+    int loggedInUserIdIndex = userIds.indexOf(678);
     if(loggedInUserIdIndex == 0) {
       assignableUserIds = userIds;
     }
@@ -100,12 +100,12 @@ class _MyHomePageState extends State<_MyHomePage> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [GreenDice(assignableUserIds[1]), YellowDice(assignableUserIds[2])],
+            children: [GreenDice(assignableUserIds[1]),Text('${assignableUserIds[1]}'), Spacer(), YellowDice(assignableUserIds[2]), Text('${assignableUserIds[2]}')],
           ),
           LudoArena(keyBar, gameState),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [RedDice(assignableUserIds[0]), BlueDice(assignableUserIds[3])],
+            children: [RedDice(assignableUserIds[0]),Text('${assignableUserIds[0]}'),Spacer(), BlueDice(assignableUserIds[3]),Text('${assignableUserIds[3]}')],
           ),
         ],
       ),

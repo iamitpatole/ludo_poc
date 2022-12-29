@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../models/position.dart';
 import '../models/token_type.dart';
 import '../utility/path.dart';
+import 'free_turn.dart';
 
 class GameState with ChangeNotifier {
   List<Token> gameTokens = [];
@@ -80,16 +81,30 @@ class GameState with ChangeNotifier {
     int pathPosition;
      Token existingToken = gameTokens.where((t) => t.id == token.id).first;
     if (token.tokenState == TokenState.home) return;
-    if (token.tokenState == TokenState.initial && steps != 6) return;
-    if (token.tokenState == TokenState.initial && steps == 6) {
-      destination = _getPosition(token.type, 0);
-      pathPosition = 0;
-     
+    //if (token.tokenState == TokenState.initial && steps != 6) return;
+    if (token.tokenState == TokenState.initial && steps != 0) {
+      destination = _getPosition(token.type, steps);
+      pathPosition = steps;
+      
       _updateInitalPositions(token);
-      _updateBoardState(existingToken, token, destination, pathPosition);
-      existingToken.tokenPosition = destination;
-      existingToken.positionInPath = pathPosition;      
-      notifyListeners();
+      var cutToken = _updateBoardState(existingToken, token, destination, steps);
+      existingToken.positionInPath = 0;      
+      int duration = 0;  
+
+      for (int i = 1; i <= steps; i++) {
+        duration = duration + 200;
+        Future.delayed(Duration(milliseconds: duration), () {
+          int stepLoc = token.positionInPath + 1;
+          existingToken.tokenPosition =_getPosition(token.type, stepLoc);
+          existingToken.positionInPath = stepLoc;
+          token.positionInPath = stepLoc;
+          notifyListeners();
+        });
+      }
+      if (cutToken != null) {
+        _cutOutToken(cutToken, duration, existingToken);
+      }
+      validateFreeTurn(steps, token, cutToken);
     } else if (token.tokenState != TokenState.initial) {
       int step = token.positionInPath + steps;
       if (step > 56) return;
@@ -101,32 +116,59 @@ class GameState with ChangeNotifier {
         duration = duration + 200;
         Future.delayed(Duration(milliseconds: duration), () {
           int stepLoc = token.positionInPath + 1;
-          existingToken.tokenPosition =
-              _getPosition(token.type, stepLoc);
+          existingToken.tokenPosition =_getPosition(token.type, stepLoc);
           existingToken.positionInPath = stepLoc;
           token.positionInPath = stepLoc;
           notifyListeners();
         });
       }
       if (cutToken != null) {
-        int cutSteps = cutToken.positionInPath;
-        for (int i = 1; i <= cutSteps; i++) {
-          duration = duration + 100;
-          Future.delayed(Duration(milliseconds: duration), () {
-            int stepLoc = cutToken.positionInPath - 1;
-            existingToken.tokenPosition =
-                _getPosition(cutToken.type, stepLoc);
-            existingToken.positionInPath = stepLoc;
-            cutToken.positionInPath = stepLoc;
-            notifyListeners();
-          });
-        }
-        Future.delayed(Duration(milliseconds: duration), () {
-          _cutToken(cutToken);
-          notifyListeners();
-        });
+        _cutOutToken(cutToken, duration, existingToken);
       }
+       validateFreeTurn(steps, token, cutToken);
     }
+  }
+
+  validateFreeTurn(int steps, Token token, var cutToken) {
+    if (steps == 6) {
+      FreeTurn.updateFreeTurn(token.userId, true);
+    } else {
+      updateNextTurn(token);
+    }
+    if (cutToken != null) {
+      FreeTurn.updateFreeTurn(token.userId, true);
+    } else if (steps != 6) {
+      updateNextTurn(token);
+    }
+  }
+
+  void updateNextTurn(Token token) {
+    FreeTurn.updateFreeTurn(token.userId, false);
+    int userIdIndex = assignableUserIds.indexOf(token.userId);
+    if(userIdIndex < 3) {
+      FreeTurn.updateFreeTurn(assignableUserIds[userIdIndex+1], true);
+    } else {
+      FreeTurn.updateFreeTurn(assignableUserIds[0], true);
+    }
+  }
+
+  _cutOutToken(Token cutToken, int duration, Token existingToken) {
+    int cutSteps = cutToken.positionInPath;
+    for (int i = 1; i <= cutSteps; i++) {
+      duration = duration + 100;
+      Future.delayed(Duration(milliseconds: duration), () {
+        int stepLoc = cutToken.positionInPath - 1;
+        existingToken.tokenPosition =
+            _getPosition(cutToken.type, stepLoc);
+        existingToken.positionInPath = stepLoc;
+        cutToken.positionInPath = stepLoc;
+        notifyListeners();
+      });
+    }
+    Future.delayed(Duration(milliseconds: duration), () {
+      _cutToken(cutToken);
+      notifyListeners();
+    });
   }
 
   Token? _updateBoardState(Token existingToken, 
@@ -135,8 +177,6 @@ class GameState with ChangeNotifier {
     //when the destination is on any star
     if (starPositions.contains(destination)) {
       existingToken.tokenState = TokenState.safe;
-      //this.gameTokens[token.id].tokenPosition = destination;
-      //this.gameTokens[token.id].positionInPath = pathPosition;
       return null;
     }
     List<Token> tokenAtDestination = gameTokens.where((tkn) {
@@ -147,9 +187,7 @@ class GameState with ChangeNotifier {
     }).toList();
     //if no one at the destination
     if (tokenAtDestination.isEmpty) {
-      gameTokens[token.id].tokenState = TokenState.normal;
-      //this.gameTokens[token.id].tokenPosition = destination;
-      //this.gameTokens[token.id].positionInPath = pathPosition;
+      existingToken.tokenState = TokenState.normal;
       return null;
     }
     //check for same color at destination
@@ -161,11 +199,9 @@ class GameState with ChangeNotifier {
     }).toList();
     if (tokenAtDestinationSameType.length == tokenAtDestination.length) {
       for (Token tkn in tokenAtDestinationSameType) {
-        gameTokens[tkn.id].tokenState = TokenState.safeinpair;
+        tkn.tokenState = TokenState.safeinpair;
       }
-      gameTokens[token.id].tokenState = TokenState.safeinpair;
-      //this.gameTokens[token.id].tokenPosition = destination;
-      //this.gameTokens[token.id].positionInPath = pathPosition;
+      existingToken.tokenState = TokenState.safeinpair;
       return null;
     }
     if (tokenAtDestinationSameType.length < tokenAtDestination.length) {
@@ -175,15 +211,13 @@ class GameState with ChangeNotifier {
           //_cutToken(tkn);
           cutToken = tkn;
         } else if (tkn.type == token.type) {
-          gameTokens[tkn.id].tokenState = TokenState.safeinpair;
+          tkn.tokenState = TokenState.safeinpair;
         }
       }
       //place token
-      gameTokens[token.id].tokenState = tokenAtDestinationSameType.isNotEmpty
+      existingToken.tokenState = tokenAtDestinationSameType.isNotEmpty
           ? TokenState.safeinpair
           : TokenState.normal;
-      // this.gameTokens[token.id].tokenPosition = destination;
-      // this.gameTokens[token.id].positionInPath = pathPosition;
       return cutToken;
     }
     return null;
