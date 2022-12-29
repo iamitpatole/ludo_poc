@@ -89,6 +89,7 @@ class _MyHomePageState extends State<_MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final gameState = Provider.of<GameState>(context);
+    gameState.setAssinableUserId(assignableUserIds);
     return Scaffold(
       appBar: AppBar(
         key: keyBar,
@@ -97,7 +98,6 @@ class _MyHomePageState extends State<_MyHomePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [GreenDice(assignableUserIds[1]), YellowDice(assignableUserIds[2])],

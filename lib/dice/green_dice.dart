@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/dice_model.dart';
+import '../providers/dice_turn.dart';
 
 class GreenDice extends StatelessWidget {
   final int userId;
@@ -29,6 +30,7 @@ class GreenDice extends StatelessWidget {
       "assets/images/6.png",
     ];
     final dice = Provider.of<DiceModel>(context);
+    final diceTurn = Provider.of<DiceTurn>(context, listen: false);
     final c = dice.diceFour;
     var img = Image.asset(
       diceOneImages[c - 1],
@@ -47,7 +49,20 @@ class GreenDice extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => updateDices(dice),
+                    onTap: () => {
+                      if (diceTurn.userId == userId) {
+                        updateDices(dice)
+                      }
+                      else {
+                          showDialog(
+                              context: context,
+                              builder: (_) {
+                                return const AlertDialog(
+                                  title: Text('Its Not Your Turn'),
+                                );
+                              })
+                        }
+                    },
                     child: img,
                   ),
                 ),

@@ -12,28 +12,30 @@ class GameState with ChangeNotifier {
   List<Position> yellowInitital = [];
   List<Position> blueInitital = [];
   List<Position> redInitital = [];
+  var tokenIntialized = false;
+  var assignableUserIds = <int>[0,0,0,0];
   GameState() {
     gameTokens = [
       //Green Tokens home
-      Token(TokenType.green, const Position(2, 2), TokenState.initial, 0  , 0),
-      Token(TokenType.green, const Position(2, 3), TokenState.initial, 1 , 1),
-      Token(TokenType.green, const Position(3, 2), TokenState.initial,2  , 2),
-      Token(TokenType.green, const Position(3, 3), TokenState.initial,3  ,3),
-      //Yellow Token
-      Token(TokenType.yellow, const Position(2, 11), TokenState.initial, 4 ,4),
-      Token(TokenType.yellow, const Position(2, 12), TokenState.initial,5 ,5),
-      Token(TokenType.yellow, const Position(3, 11), TokenState.initial,6 ,6),
-      Token(TokenType.yellow, const Position(3, 12), TokenState.initial, 7 ,7),
-      // Blue Token
-      Token(TokenType.blue, const Position(11, 11), TokenState.initial,08 ,8),
-      Token(TokenType.blue, const Position(11, 12), TokenState.initial,09 ,9),
-      Token(TokenType.blue, const Position(12, 11), TokenState.initial,10 ,10),
-      Token(TokenType.blue, const Position(12, 12), TokenState.initial,11 ,11),
-      // Red Token
-      Token(TokenType.red, const Position(11, 2), TokenState.initial,12 ,12),
-      Token(TokenType.red, const Position(11, 3), TokenState.initial,13 ,13),
-      Token(TokenType.red, const Position(12, 2), TokenState.initial,14 ,14),
-      Token(TokenType.red, const Position(12, 3), TokenState.initial,15 ,15),
+      // Token(TokenType.green, const Position(2, 2), TokenState.initial, 0  , 0),
+      // Token(TokenType.green, const Position(2, 3), TokenState.initial, 1 , 1),
+      // Token(TokenType.green, const Position(3, 2), TokenState.initial,2  , 2),
+      // Token(TokenType.green, const Position(3, 3), TokenState.initial,3  ,3),
+      // //Yellow Token
+      // Token(TokenType.yellow, const Position(2, 11), TokenState.initial, 4 ,4),
+      // Token(TokenType.yellow, const Position(2, 12), TokenState.initial,5 ,5),
+      // Token(TokenType.yellow, const Position(3, 11), TokenState.initial,6 ,6),
+      // Token(TokenType.yellow, const Position(3, 12), TokenState.initial, 7 ,7),
+      // // Blue Token
+      // Token(TokenType.blue, const Position(11, 11), TokenState.initial,08 ,8),
+      // Token(TokenType.blue, const Position(11, 12), TokenState.initial,09 ,9),
+      // Token(TokenType.blue, const Position(12, 11), TokenState.initial,10 ,10),
+      // Token(TokenType.blue, const Position(12, 12), TokenState.initial,11 ,11),
+      // // Red Token
+      // Token(TokenType.red, const Position(11, 2), TokenState.initial,12 ,12),
+      // Token(TokenType.red, const Position(11, 3), TokenState.initial,13 ,13),
+      // Token(TokenType.red, const Position(12, 2), TokenState.initial,14 ,14),
+      // Token(TokenType.red, const Position(12, 3), TokenState.initial,15 ,15),
     ];
     starPositions = [
       const Position(6, 1),
@@ -46,34 +48,62 @@ class GameState with ChangeNotifier {
       const Position(8, 2)
     ];
   }
+  setAssinableUserId(var assignableUserIdss) {
+      assignableUserIds = assignableUserIdss;
+      if(!tokenIntialized) {
+        // Red Token
+        gameTokens.add(Token(TokenType.red, const Position(11, 2), TokenState.initial,assignableUserIds[0] ,12));
+        gameTokens.add(Token(TokenType.red, const Position(11, 3), TokenState.initial,assignableUserIds[0] ,13));
+        gameTokens.add(Token(TokenType.red, const Position(12, 2), TokenState.initial,assignableUserIds[0],14));
+        gameTokens.add(Token(TokenType.red, const Position(12, 3), TokenState.initial,assignableUserIds[0],15));
+        //green tokens
+        gameTokens.add(Token(TokenType.green, const Position(2, 2), TokenState.initial,assignableUserIds[1]  , 33));
+        gameTokens.add(Token(TokenType.green, const Position(2, 3), TokenState.initial, assignableUserIds[1], 1));
+        gameTokens.add(Token(TokenType.green, const Position(3, 2), TokenState.initial,assignableUserIds[1], 2));
+        gameTokens.add(Token(TokenType.green, const Position(3, 3), TokenState.initial,assignableUserIds[1],3));
+        //Yellow Token
+        gameTokens.add(Token(TokenType.yellow, const Position(2, 11), TokenState.initial,assignableUserIds[2],4));
+        gameTokens.add(Token(TokenType.yellow, const Position(2, 12), TokenState.initial,assignableUserIds[2],5));
+        gameTokens.add(Token(TokenType.yellow, const Position(3, 11), TokenState.initial,assignableUserIds[2],6));
+        gameTokens.add(Token(TokenType.yellow, const Position(3, 12), TokenState.initial,assignableUserIds[2],7));
+        // Blue Token
+        gameTokens.add(Token(TokenType.blue, const Position(11, 11), TokenState.initial,assignableUserIds[3],8));
+        gameTokens.add(Token(TokenType.blue, const Position(11, 12), TokenState.initial,assignableUserIds[3],9));
+        gameTokens.add(Token(TokenType.blue, const Position(12, 11), TokenState.initial,assignableUserIds[3],10));
+        gameTokens.add(Token(TokenType.blue, const Position(12, 12), TokenState.initial,assignableUserIds[3],11));
+        tokenIntialized = true;
+      } 
+    }
 
   moveToken(Token token, int steps) {
     Position destination;
     int pathPosition;
+     Token existingToken = gameTokens.where((t) => t.id == token.id).first;
     if (token.tokenState == TokenState.home) return;
     if (token.tokenState == TokenState.initial && steps != 6) return;
     if (token.tokenState == TokenState.initial && steps == 6) {
       destination = _getPosition(token.type, 0);
       pathPosition = 0;
+     
       _updateInitalPositions(token);
-      _updateBoardState(token, destination, pathPosition);
-      gameTokens[token.id].tokenPosition = destination;
-      gameTokens[token.id].positionInPath = pathPosition;
+      _updateBoardState(existingToken, token, destination, pathPosition);
+      existingToken.tokenPosition = destination;
+      existingToken.positionInPath = pathPosition;      
       notifyListeners();
     } else if (token.tokenState != TokenState.initial) {
       int step = token.positionInPath + steps;
       if (step > 56) return;
       destination = _getPosition(token.type, step);
       pathPosition = step;
-      var cutToken = _updateBoardState(token, destination, pathPosition);
+      var cutToken = _updateBoardState(existingToken, token, destination, pathPosition);
       int duration = 0;
       for (int i = 1; i <= steps; i++) {
         duration = duration + 200;
         Future.delayed(Duration(milliseconds: duration), () {
           int stepLoc = token.positionInPath + 1;
-          gameTokens[token.id].tokenPosition =
+          existingToken.tokenPosition =
               _getPosition(token.type, stepLoc);
-          gameTokens[token.id].positionInPath = stepLoc;
+          existingToken.positionInPath = stepLoc;
           token.positionInPath = stepLoc;
           notifyListeners();
         });
@@ -84,9 +114,9 @@ class GameState with ChangeNotifier {
           duration = duration + 100;
           Future.delayed(Duration(milliseconds: duration), () {
             int stepLoc = cutToken.positionInPath - 1;
-            gameTokens[cutToken.id].tokenPosition =
+            existingToken.tokenPosition =
                 _getPosition(cutToken.type, stepLoc);
-            gameTokens[cutToken.id].positionInPath = stepLoc;
+            existingToken.positionInPath = stepLoc;
             cutToken.positionInPath = stepLoc;
             notifyListeners();
           });
@@ -99,12 +129,12 @@ class GameState with ChangeNotifier {
     }
   }
 
-  Token? _updateBoardState(
+  Token? _updateBoardState(Token existingToken, 
       Token token, Position destination, int pathPosition) {
     Token? cutToken;
     //when the destination is on any star
     if (starPositions.contains(destination)) {
-      gameTokens[token.id].tokenState = TokenState.safe;
+      existingToken.tokenState = TokenState.safe;
       //this.gameTokens[token.id].tokenPosition = destination;
       //this.gameTokens[token.id].positionInPath = pathPosition;
       return null;

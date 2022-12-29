@@ -39,7 +39,7 @@ class Tokenp extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           if(diceTurn.userId == token.userId) {
-            gameState.moveToken(token, dice.diceOne);
+            gameState.moveToken(token, detectTokenDiceNumber(token, dice));
           } else {
             showDialog(context: context, builder: (_) {
               return const AlertDialog(title: Text('Its Not Your Turn'),);
@@ -56,5 +56,21 @@ class Tokenp extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  int detectTokenDiceNumber(Token token, DiceModel dice) {
+      if(token.type.name == 'red') {
+        return dice.diceOneCount;
+      }
+      if(token.type.name == 'green') {
+        return dice.diceTwoCount;
+      }
+      if(token.type.name == 'yellow') {
+        return dice.diceThreeCount;
+      }
+      if(token.type.name == 'blue') {
+        return dice.diceFourCount;
+      }
+      return 0;
   }
 }
