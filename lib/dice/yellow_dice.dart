@@ -16,11 +16,14 @@ class YellowDice extends StatelessWidget {
         dice.generateDiceThree();
       });
     }
+    FreeTurn.updateUserStatus(userId, true, true);
   }
 
   @override
   @override
   Widget build(BuildContext context) {
+    bool? freeTurn = FreeTurn.freeTurnMap[userId]?.getFreeTurn;
+    bool? diceRoll = FreeTurn.freeTurnMap[userId]?.getDiceRoll;
     List<String> diceOneImages = [
       "assets/images/1.png",
       "assets/images/2.png",
@@ -49,7 +52,7 @@ class YellowDice extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () => {
-                      if (FreeTurn.freeTurnMap[userId]!) {
+                       if (diceRoll == false && freeTurn == true) {
                         updateDices(dice)
                       }
                       else {

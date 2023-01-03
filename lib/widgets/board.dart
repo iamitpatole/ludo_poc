@@ -8,6 +8,7 @@ class Board extends StatelessWidget {
   const Board(this.keyRefrences, {super.key});
 
   List<Container> _getRows() {
+    
     List<Container> rows = [];
     for (var i = 0; i < 15; i++) {
       rows.add(
@@ -37,7 +38,7 @@ class Board extends StatelessWidget {
         child: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/images/ludo_board.png"),
+              image: AssetImage("assets/images/ludo_board_original.png"),
               fit: BoxFit.fill,
             ),
           ),

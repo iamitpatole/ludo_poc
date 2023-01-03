@@ -12,21 +12,9 @@ class Tokenp extends StatelessWidget {
   //Function(Token) callBack;
   const Tokenp(this.token, this.dimentions, {super.key});
 
-  Color _getcolor() {
-    switch (token.type) {
-      case TokenType.green:
-        return Colors.green;
-      case TokenType.yellow:
-        return Colors.yellow.shade900;
-      case TokenType.blue:
-        return Colors.blue.shade600;
-      case TokenType.red:
-        return Colors.red;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    bool? freeTurn = FreeTurn.freeTurnMap[token.userId]?.getFreeTurn;
     final gameState = Provider.of<GameState>(context, listen: false);
     final dice = Provider.of<DiceModel>(context, listen: false);
     return AnimatedPositioned(
@@ -37,8 +25,8 @@ class Tokenp extends StatelessWidget {
       height: dimentions[3],
       child: GestureDetector(
         onTap: () {
-          print(FreeTurn.freeTurnMap[token.userId]);
-          if(FreeTurn.freeTurnMap[token.userId]!) {
+          bool? diceRoll = FreeTurn.freeTurnMap[token.userId]?.diceRoll;
+          if(freeTurn == true && diceRoll == true) {
             gameState.moveToken(token, detectTokenDiceNumber(token, dice));
           } else {
             showDialog(context: context, builder: (_) {
@@ -46,14 +34,11 @@ class Tokenp extends StatelessWidget {
             });
           }
         },
-        child: Card(
-          elevation: 5,
-          child: Icon(
+        child: Icon(
             Icons.cruelty_free_sharp,
             color: _getcolor(),
-            size: 25.0,
+            size: 28.0,
           ),
-        ),
       ),
     );
   }
@@ -72,5 +57,18 @@ class Tokenp extends StatelessWidget {
         return dice.diceTwoCount;
       }
       return 0;
+  }
+
+  Color _getcolor() {
+    switch (token.type) {
+      case TokenType.green:
+        return Colors.green.shade900;
+      case TokenType.yellow:
+        return Colors.yellow.shade900;
+      case TokenType.blue:
+        return Colors.blue.shade900;
+      case TokenType.red:
+        return Colors.red.shade900;
+    }
   }
 }

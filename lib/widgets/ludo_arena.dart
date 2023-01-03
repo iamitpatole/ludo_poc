@@ -45,8 +45,6 @@ List<double> _getPosition(int row, int column) {
     var listFrame = <double>[];
     double x, y, w, h;
     if (widget.keyBar.currentContext == null) return [0, 0, 0, 0];
-    // final RenderBox renderBoxBar =
-    //     widget.keyBar.currentContext!.findRenderObject()! as RenderBox;
     final cellBoxKey = keyRefrences[row][column];
     final RenderBox renderBoxCell =
         cellBoxKey.currentContext!.findRenderObject()! as RenderBox;
@@ -55,7 +53,6 @@ List<double> _getPosition(int row, int column) {
     y = positionCell.dy - 250;
     w = renderBoxCell.size.width;
     h = renderBoxCell.size.height;
-
     listFrame.add(x);
     listFrame.add(y);
     listFrame.add(w);

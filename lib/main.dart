@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Flame',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (context) => DiceModel()),
           ],
           child: const _MyHomePage(
-            title: 'Flutter Demo Home Page',
+            title: 'Flame',
             key: null,
           )),
     );
@@ -56,7 +56,7 @@ class _MyHomePageState extends State<_MyHomePage> {
   void initState() {
     userIds = [123,789,456,678];  
     detectDiceUserId();
-    FreeTurn.updateFreeTurn(assignableUserIds[0], true);
+    FreeTurn.updateUserStatus(assignableUserIds[0], true, false);
     super.initState();
   }
 
@@ -91,6 +91,7 @@ class _MyHomePageState extends State<_MyHomePage> {
     final gameState = Provider.of<GameState>(context);
     gameState.setAssinableUserId(assignableUserIds);
     return Scaffold(
+      backgroundColor: Colors.blue.shade300,
       appBar: AppBar(
         key: keyBar,
         title: Text(widget.title),
@@ -100,7 +101,7 @@ class _MyHomePageState extends State<_MyHomePage> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [GreenDice(assignableUserIds[1]),Text('${assignableUserIds[1]}'), Spacer(), YellowDice(assignableUserIds[2]), Text('${assignableUserIds[2]}')],
+            children: [GreenDice(assignableUserIds[1]),Text('${assignableUserIds[1]}'), const Spacer(), YellowDice(assignableUserIds[2]), Text('${assignableUserIds[2]}')],
           ),
           LudoArena(keyBar, gameState),
           Row(
