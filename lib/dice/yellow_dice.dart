@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/dice_model.dart';
-import '../providers/free_turn.dart';
+import '../providers/game_user_status.dart';
 
 class YellowDice extends StatelessWidget {
   final int userId;
@@ -16,14 +16,13 @@ class YellowDice extends StatelessWidget {
         dice.generateDiceThree();
       });
     }
-    FreeTurn.updateUserStatus(userId, true, true);
+    GameUserStatus.updateUserStatus(userId, true, true);
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
-    bool? freeTurn = FreeTurn.freeTurnMap[userId]?.getFreeTurn;
-    bool? diceRoll = FreeTurn.freeTurnMap[userId]?.getDiceRoll;
+    bool? freeTurn = GameUserStatus.userStatusMap[userId]?.getFreeTurn;
+    bool? diceRoll = GameUserStatus.userStatusMap[userId]?.getDiceRoll;
     List<String> diceOneImages = [
       "assets/images/1.png",
       "assets/images/2.png",
@@ -52,7 +51,7 @@ class YellowDice extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () => {
-                       if (diceRoll == false && freeTurn == true) {
+                      if (diceRoll == false && freeTurn == true) {
                         updateDices(dice)
                       }
                       else {

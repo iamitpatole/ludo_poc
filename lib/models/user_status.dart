@@ -22,4 +22,9 @@ class UserStatus
     return diceRoll;
   }
  
+
+  UserStatus.fromJson(Map json)
+      : freeTurn = json['freeTurn'],
+        diceRoll = json['diceRoll'],
+        score = json['score'] as int;
 }

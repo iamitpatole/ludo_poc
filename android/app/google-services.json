@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "57121238462",
+    "firebase_url": "https://ludo-poc-default-rtdb.firebaseio.com",
+    "project_id": "ludo-poc",
+    "storage_bucket": "ludo-poc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:57121238462:android:81571d68caff3f992b5def",
+        "android_client_info": {
+          "package_name": "com.example.ludo_poc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "57121238462-qhun3favvq15392q04gf7h7hd45rev9m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3lQJ5GbJTvzdhK81eFXZC93WQbkmqbVY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "57121238462-qhun3favvq15392q04gf7h7hd45rev9m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

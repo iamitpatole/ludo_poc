@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:ludo_poc/dice/blue_dice.dart';
 import 'package:ludo_poc/dice/green_dice.dart';
@@ -7,11 +10,14 @@ import 'package:ludo_poc/widgets/ludo_arena.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/dice_model.dart';
-import 'providers/free_turn.dart';
+import 'providers/game_user_status.dart';
 import 'providers/game_state.dart';
+import 'utility/firestoredb.dart';
 
-void main() {
+Future<void> main() async {
   //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -51,14 +57,31 @@ class _MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<_MyHomePage> {
   var userIds = <int>[];
   var assignableUserIds = <int>[0,0,0,0];
+  
+  late StreamSubscription _dailySpecialStream;
 
   @override
   void initState() {
+    _activateListener();
     userIds = [123,789,456,678];  
     detectDiceUserId();
-    FreeTurn.updateUserStatus(assignableUserIds[0], true, false);
+    GameUserStatus.updateInitialStatusOfUser(userIds);    
+    GameUserStatus.updateUserStatus(assignableUserIds[0], true, false);
     super.initState();
   }
+
+  @override
+  void deactivate() {
+    _dailySpecialStream.cancel();
+    super.deactivate();
+  }
+
+  void _activateListener() {
+    _dailySpecialStream = FireStoreDB.collectionReference.doc('matchid123').snapshots().listen((querySnapshot) {
+      GameUserStatus.updateUserStatusMap(querySnapshot.data() as Map);
+    });
+  }
+
 
   detectDiceUserId() {
     int loggedInUserIdIndex = userIds.indexOf(678);

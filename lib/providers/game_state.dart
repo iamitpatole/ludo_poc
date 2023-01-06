@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../models/position.dart';
 import '../models/token_type.dart';
 import '../utility/path.dart';
-import 'free_turn.dart';
+import 'game_user_status.dart';
 
 class GameState with ChangeNotifier {
   List<Token> gameTokens = [];
@@ -131,24 +131,24 @@ class GameState with ChangeNotifier {
 
   validateFreeTurn(int steps, Token token, var cutToken) {
     if (steps == 6) {
-      FreeTurn.updateUserStatus(token.userId, true, false);
+      GameUserStatus.updateUserStatus(token.userId, true, false);
      } else {
       updateNextTurn(token);
     }
     if (cutToken != null) {
-      FreeTurn.updateUserStatus(token.userId, true, false);
+      GameUserStatus.updateUserStatus(token.userId, true, false);
     } else if (steps != 6) {
       updateNextTurn(token);
     }
   }
 
   void updateNextTurn(Token token) {
-    FreeTurn.updateUserStatus(token.userId, false, false);
+    GameUserStatus.updateUserStatus(token.userId, false, false);
     int userIdIndex = assignableUserIds.indexOf(token.userId);
     if(userIdIndex < 3) {
-      FreeTurn.updateUserStatus(assignableUserIds[userIdIndex+1], true, false);
+      GameUserStatus.updateUserStatus(assignableUserIds[userIdIndex+1], true, false);
     } else {
-      FreeTurn.updateUserStatus(assignableUserIds[0], true, false);
+      GameUserStatus.updateUserStatus(assignableUserIds[0], true, false);
     }
   }
 
